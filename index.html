@@ -1,11 +1,334 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gasta como un Narco de Netflix — Simulador Viral</title>
+  <meta name="description" content="Gasta una fortuna absurda comprando mansiones, jets y fiestas. ¿Cuánto te dura el dinero? Comparte tu resultado." />
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#ffb86b;--muted:#94a3b8;--glass: rgba(255,255,255,0.03)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#e6eef8;background:linear-gradient(180deg,#061025 0%, #071430 60%);-webkit-font-smoothing:antialiased}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px}
+    .logo{display:flex;gap:12px;align-items:center}
+    .logo .badge{background:linear-gradient(90deg,#ff9f43,#ff6b6b);padding:8px;border-radius:10px;color:#071430;font-weight:700}
+    .container{max-width:1100px;margin:18px auto;padding:0 16px}
+    .hero{background:linear-gradient(90deg, rgba(255,184,107,0.06), rgba(255,255,255,0.02));border-radius:16px;padding:18px;display:flex;gap:18px;align-items:center}
+    .left{flex:1}
+    .title{font-size:20px;font-weight:800;margin:0;color:#fff}
+    .subtitle{color:var(--muted);margin-top:6px}
+    .budget{margin-top:12px;background:var(--glass);padding:12px;border-radius:12px;display:flex;align-items:center;justify-content:space-between}
+    .big{font-size:20px;font-weight:800}
+    .controls{display:flex;gap:8px;align-items:center}
+    .btn{background:#0ea5a9;padding:8px 12px;border-radius:10px;color:#071430;font-weight:700;border:none;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    main{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:18px}
+    .shop{background:var(--card);padding:12px;border-radius:12px;min-height:420px}
+    .items{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .item{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:10px;border-radius:10px;display:flex;gap:10px;align-items:center}
+    .thumb{width:72px;height:72px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:32px}
+    .meta{flex:1}
+    .name{font-weight:700}
+    .price{color:var(--accent);font-weight:800}
+    .buy{background:linear-gradient(90deg,#ff9f43,#ff6b6b);border:none;padding:8px 10px;border-radius:8px;color:#071430;font-weight:800;cursor:pointer}
+    .sidebar{background:var(--card);padding:12px;border-radius:12px;height:100%}
+    .progress{height:12px;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;margin-top:10px}
+    .bar{height:100%;background:linear-gradient(90deg,#ff6b6b,#ff9f43);width:0%}
+    footer{margin:20px 0;color:var(--muted);text-align:center}
+    .controls input, .controls select{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:8px;color:#e6eef8}
+    .row{display:flex;gap:8px;align-items:center}
+    .result{margin-top:12px;padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.06));color:#fff}
+    @media(max-width:900px){main{grid-template-columns:1fr} .items{grid-template-columns:1fr} .sidebar{order:2}}
+  </style>
 </head>
 <body>
-    
+  <header>
+    <div class="logo">
+      <div class="badge">G$</div>
+      <div>
+        <div style="font-weight:800;color:#fff">Gasta como un Narco</div>
+        <div style="font-size:12px;color:var(--muted)">Edición Netflix — Simulador viral</div>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn ghost" id="shareBtn">Compartir</button>
+      <button class="btn" id="resetBtn">Reiniciar</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="hero">
+      <div class="left">
+        <h1 class="title">Gasta como si fueras el protagonista de la serie</h1>
+        <div class="subtitle">Compra mansiones, jets, fiestas y más. ¿Cuánto dura tu fortuna?</div>
+        <div class="budget">
+          <div>
+            <div style="font-size:12px;color:var(--muted)">Presupuesto inicial</div>
+            <div class="big" id="budgetDisplay">$50,000,000</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:12px;color:var(--muted)">Dinero restante</div>
+            <div class="big" id="remainingDisplay">$50,000,000</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+          <div class="controls">
+            <label style="font-size:13px;color:var(--muted)">Presupuesto:</label>
+            <input type="number" id="budgetInput" value="50000000" min="1000" step="1000" />
+            <select id="currency">
+              <option value="USD">USD</option>
+              <option value="MXN">MXN</option>
+            </select>
+          </div>
+          <button class="btn" id="applyBudget">Aplicar</button>
+        </div>
+      </div>
+      <div style="width:320px;text-align:right">
+        <div style="font-size:12px;color:var(--muted)">Comparte y reta</div>
+        <div style="margin-top:8px">
+          <button class="btn" id="challengeBtn">Retar a un amigo</button>
+        </div>
+        <div style="margin-top:18px;color:var(--muted);font-size:13px">Anuncios</div>
+        <div style="margin-top:8px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted)">Aquí va un banner - coloca tu código de anuncio</div>
+      </div>
+    </section>
+
+    <main>
+      <section class="shop">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <h3 style="margin:0;color:#fff">Catálogo</h3>
+          <div style="color:var(--muted);font-size:13px">Filtra por categoría</div>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <select id="filterCat">
+            <option value="all">Todo</option>
+            <option value="property">Propiedades</option>
+            <option value="vehicles">Vehículos</option>
+            <option value="luxury">Lujo</option>
+            <option value="party">Fiestas & Eventos</option>
+            <option value="misc">Misceláneo</option>
+          </select>
+          <input id="search" placeholder="Buscar (ej. mansión)" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:#e6eef8"/>
+        </div>
+
+        <div class="items" id="itemsGrid"></div>
+
+        <div style="margin-top:12px;color:var(--muted);font-size:13px">Tip: comparte tu resultado en TikTok y etiqueta a un amigo para que lo intente.</div>
+
+      </section>
+
+      <aside class="sidebar">
+        <h3 style="margin:0;color:#fff">Tu progreso</h3>
+        <div style="font-size:13px;color:var(--muted);margin-top:6px">Gasta con cuidado: si llegas a cero, pierdes.</div>
+        <div class="progress">
+          <div class="bar" id="progressBar"></div>
+        </div>
+
+        <div class="result" id="resultBox">
+          <div style="font-size:13px;color:var(--muted)">Gastado</div>
+          <div style="font-weight:800;font-size:18px" id="spentDisplay">$0</div>
+          <div style="margin-top:8px;color:var(--muted)" id="outcome">Aún tienes para comprar más.</div>
+        </div>
+
+        <div style="margin-top:12px">
+          <button class="btn" id="undoBtn">Deshacer última compra</button>
+        </div>
+
+        <div style="margin-top:12px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted)">Espacio para un anuncio vertical</div>
+
+        <div style="margin-top:12px;color:var(--muted);font-size:13px">Comparte tu resultado y gana puntos de bragging rights.</div>
+      </aside>
+    </main>
+
+    <footer>
+      Hecho con ❤️ por Memo y su aliado digital. Comparte con tus amigos y etiqueta a quien se lo merece.
+    </footer>
+  </div>
+
+  <script>
+    // Datos del catálogo: nombre, categoría, precio (en USD por defecto), emoji/thumb, descripción
+    const ITEMS = [
+      {id:'p1',name:'Mansión colonial en Zacatecas',cat:'property',price:3500000,thumb:'🏰',desc:'Casa grande con jardines y vistas.'},
+      {id:'p2',name:'Rancho privado y museo',cat:'property',price:4200000,thumb:'🏡',desc:'Terreno enorme con construcciones y pista.'},
+      {id:'v1',name:'Camioneta blindada',cat:'vehicles',price:120000,thumb:'🚙',desc:'Blindaje completo y accesorios.'},
+      {id:'v2',name:'Helicóptero privado',cat:'vehicles',price:2500000,thumb:'🚁',desc:'Helipuerto incluido.'},
+      {id:'l1',name:'Yate de lujo 40m',cat:'luxury',price:3600000,thumb:'🛥️',desc:'Tripulación y mantenimiento separado.'},
+      {id:'l2',name:'Colección de relojes (30 unidades)',cat:'luxury',price:1500000,thumb:'⌚',desc:'Marcas de lujo, algunas únicas.'},
+      {id:'f1',name:'Festival privado con artistas',cat:'party',price:800000,thumb:'🎤',desc:'Invita a artistas nacionales.'},
+      {id:'f2',name:'Fiesta VIP en club exclusivo',cat:'party',price:120000,thumb:'🎉',desc:'Open bar y seguridad.'},
+      {id:'m1',name:'Fábrica de empaques',cat:'misc',price:950000,thumb:'🏭',desc:'Negocio con empleados.'},
+      {id:'m2',name:'Avión privado Gulfstream',cat:'vehicles',price:45000000,thumb:'✈️',desc:'Lo máximo en viajes privados.'},
+      {id:'m3',name:'Compra de votos (satírico)',cat:'misc',price:500000,thumb:'🗳️',desc:'Solo para la broma.'},
+      {id:'m4',name:'Colección de arte contemporáneo',cat:'luxury',price:2100000,thumb:'🖼️',desc:'Piezas con valor cultural.'}
+    ];
+
+    // Estado
+    let state = {
+      budget: 50000000,
+      currency: 'USD',
+      remaining: 50000000,
+      spent: 0,
+      history: [] // lista de item ids comprados
+    }
+
+    // DOM refs
+    const itemsGrid = document.getElementById('itemsGrid');
+    const budgetDisplay = document.getElementById('budgetDisplay');
+    const remainingDisplay = document.getElementById('remainingDisplay');
+    const spentDisplay = document.getElementById('spentDisplay');
+    const progressBar = document.getElementById('progressBar');
+    const outcome = document.getElementById('outcome');
+
+    function formatMoney(n){
+      const curr = state.currency;
+      if(curr==='USD') return '$' + n.toLocaleString('en-US');
+      if(curr==='MXN') return 'MX$' + n.toLocaleString('en-US');
+      return '$' + n.toLocaleString();
+    }
+
+    function renderItems(filter='all',search=''){
+      itemsGrid.innerHTML='';
+      const list = ITEMS.filter(i=> (filter==='all'||i.cat===filter) && i.name.toLowerCase().includes(search.toLowerCase()) );
+      list.forEach(it=>{
+        const el = document.createElement('div'); el.className='item';
+        el.innerHTML = `
+          <div class="thumb">${it.thumb}</div>
+          <div class="meta">
+            <div class="name">${it.name}</div>
+            <div style="font-size:13px;color:var(--muted)">${it.desc}</div>
+            <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+              <div class="price">${formatMoney(it.price)}</div>
+              <button class="buy" data-id="${it.id}">Comprar</button>
+            </div>
+          </div>
+        `;
+        itemsGrid.appendChild(el);
+      })
+
+      // attach buy handlers
+      document.querySelectorAll('.buy').forEach(b=>b.addEventListener('click',()=>buyItem(b.dataset.id)));
+    }
+
+    function setBudget(n){
+      state.budget = Number(n)||50000000;
+      state.remaining = state.budget - state.spent;
+      budgetDisplay.textContent = formatMoney(state.budget);
+      updateDisplays();
+    }
+
+    function updateDisplays(){
+      remainingDisplay.textContent = formatMoney(Math.max(0,state.remaining));
+      spentDisplay.textContent = formatMoney(state.spent);
+      const pct = Math.min(100, Math.round(((state.budget - state.remaining)/state.budget)*100));
+      progressBar.style.width = pct + '%';
+      if(state.remaining<=0){
+        outcome.textContent = 'Te quedaste sin dinero. Juego terminado. 😅';
+      } else if(state.remaining < state.budget*0.1){
+        outcome.textContent = 'Cuidado: estás por quedarte sin dinero.';
+      } else {
+        outcome.textContent = 'Aún tienes para comprar más.';
+      }
+    }
+
+    function buyItem(id){
+      const item = ITEMS.find(x=>x.id===id);
+      if(!item) return;
+      if(item.price > state.remaining){
+        alert('No tienes suficiente dinero para comprar esto.');
+        return;
+      }
+      state.remaining -= item.price;
+      state.spent += item.price;
+      state.history.push(item.id);
+      updateDisplays();
+      renderToast(`Compraste: ${item.name} por ${formatMoney(item.price)}`)
+      // Easter: si compras avión privado, mensaje especial
+      if(item.id==='m2'){
+        renderToast('¡Vaya! Compraste el avión más caro — espero que tengas piloto. ✈️');
+      }
+    }
+
+    function undo(){
+      const last = state.history.pop();
+      if(!last) return renderToast('No hay compras para deshacer.');
+      const item = ITEMS.find(x=>x.id===last);
+      state.spent -= item.price;
+      state.remaining += item.price;
+      updateDisplays();
+      renderToast('Compra deshecha: ' + item.name);
+    }
+
+    function reset(){
+      state.spent = 0; state.history = []; state.remaining = state.budget; updateDisplays(); renderToast('Juego reiniciado.');
+    }
+
+    function renderToast(msg){
+      const t = document.createElement('div');
+      t.textContent = msg; t.style.position='fixed'; t.style.right='18px'; t.style.bottom='18px'; t.style.background='rgba(0,0,0,0.6)'; t.style.color='white'; t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.zIndex=9999;
+      document.body.appendChild(t);
+      setTimeout(()=>{t.style.transition='opacity 0.4s';t.style.opacity=0;setTimeout(()=>t.remove(),400)},2200)
+    }
+
+    // Share / challenge result
+    function shareResult(){
+      const msg = `Gaste ${formatMoney(state.spent)} y me quedan ${formatMoney(state.remaining)}. ¿Puedes gastar más?`;
+      if(navigator.share){
+        navigator.share({title:'Gasta como un Narco',text:msg,url:location.href}).catch(()=>{});
+      } else {
+        prompt('Copia y comparte este resultado:', msg + ' — ' + location.href);
+      }
+    }
+
+    // init
+    document.getElementById('applyBudget').addEventListener('click',()=>{
+      const v = Number(document.getElementById('budgetInput').value)||50000000;
+      state.currency = document.getElementById('currency').value;
+      setBudget(v);
+      renderToast('Presupuesto actualizado: ' + formatMoney(state.budget));
+    });
+    document.getElementById('resetBtn').addEventListener('click',()=>{ reset(); });
+    document.getElementById('undoBtn').addEventListener('click',()=>{ undo(); });
+    document.getElementById('shareBtn').addEventListener('click',()=>{ shareResult(); });
+    document.getElementById('challengeBtn').addEventListener('click',()=>{ shareResult(); });
+
+    document.getElementById('filterCat').addEventListener('change',(e)=>renderItems(e.target.value,document.getElementById('search').value));
+    document.getElementById('search').addEventListener('input',(e)=>renderItems(document.getElementById('filterCat').value,e.target.value));
+
+    // keyboard cheat: tecla G para gastar aleatorio
+    document.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='g'){ const r = ITEMS[Math.floor(Math.random()*ITEMS.length)]; buyItem(r.id);} })
+
+    // carga inicial
+    setBudget(state.budget);
+    renderItems();
+
+    // Save/restore via URL (shareable)
+    function stateToQuery(){
+      const q = new URLSearchParams(); q.set('b',state.budget); q.set('s',state.spent); q.set('h',state.history.join(',')); return q.toString();
+    }
+    function applyQuery(){
+      const q = new URLSearchParams(location.search);
+      if(q.has('b')){
+        state.budget = Number(q.get('b'))||state.budget;
+        state.spent = Number(q.get('s'))||0;
+        const h = q.get('h')||''; state.history = h? h.split(',') : [];
+        state.remaining = state.budget - state.spent;
+        budgetDisplay.textContent = formatMoney(state.budget);
+        updateDisplays();
+      }
+    }
+    applyQuery();
+
+    // When user wants to share a permalink with their result
+    function updateURLWithState(){
+      const q = stateToQuery(); history.replaceState(null,'', '?' + q);
+    }
+    // Update URL after every buy/undo
+    const origBuy = buyItem;
+    buyItem = function(id){ origBuy(id); updateURLWithState(); }
+    const origUndo = undo;
+    undo = function(){ origUndo(); updateURLWithState(); }
+
+  </script>
 </body>
 </html>
