@@ -198,3 +198,5 @@ document.getElementById('search').addEventListener('input', (e) => renderItems(e
 
 
 // Error para arreglar luego y no quedarme sin chamba
+
+//solucion del error para noq uedarme sin chambas
