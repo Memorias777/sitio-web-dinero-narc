@@ -195,3 +195,6 @@ document.getElementById('shareBtn').addEventListener('click', () => { shareResul
 document.getElementById('challengeBtn').addEventListener('click', () => { shareResult(); });
 
 document.getElementById('search').addEventListener('input', (e) => renderItems(e.target.value));
+
+
+// Error para arreglar luego y no quedarme sin chamba
